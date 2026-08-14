@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧙‍♀️ Ведьмин Кошель — Вход</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0d0618;
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --purple-dark: #2e1065;
+            --gold: #fbbf24;
+            --gold-light: #fde68a;
+            --gold-dark: #b45309;
+            --green: #10b981;
+            --red: #ef4444;
+            --pink: #ec4899;
+            --pixel-border: 4px;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: var(--bg);
+            color: #e0d4ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Анимированный фон со звездами */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Луна */
+        .moon {
+            position: fixed;
+            top: 50px;
+            right: 100px;
+            width: 80px;
+            height: 80px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(253, 230, 138, 0.5);
+            animation: moonGlow 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { box-shadow: 0 0 50px rgba(253, 230, 138, 0.5); }
+            50% { box-shadow: 0 0 80px rgba(253, 230, 138, 0.8); }
+        }
+
+        /* Пиксельные облака */
+        .cloud {
+            position: fixed;
+            background: var(--purple-dark);
+            opacity: 0.6;
+            z-index: 1;
+            animation: cloudFloat 20s linear infinite;
+        }
+
+        @keyframes cloudFloat {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        .cloud-1 {
+            top: 100px;
+            width: 150px;
+            height: 40px;
+            animation-duration: 25s;
+        }
+
+        .cloud-2 {
+            top: 200px;
+            width: 100px;
+            height: 30px;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+
+        /* Пиксельные орнаменты */
+        .pixel-ornament {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .ornament-1 {
+            top: 10px;
+            left: 10px;
+            width: 80px;
+            height: 80px;
+            background: var(--purple);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 15%, 15% 15%, 15% 100%, 0% 100%);
+            opacity: 0.5;
+        }
+
+        .ornament-2 {
+            bottom: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            background: var(--gold);
+            clip-path: polygon(100% 100%, 0% 100%, 0% 85%, 85% 85%, 85% 0%, 100% 0%);
+            opacity: 0.3;
+        }
+
+        .auth-container {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, #1e0a3c 100%);
+            border: var(--pixel-border) solid var(--gold);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 
+                8px 8px 0 rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(124, 58, 237, 0.3);
+            position: relative;
+            z-index: 10;
+            animation: containerAppear 0.5s ease-out;
+        }
+
+        @keyframes containerAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Стили для картинки ведьмы */
+        .witch-image {
+            width: 80px;
+            height: 80px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            object-fit: contain;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Fallback если картинка не загрузится */
+        .witch-emoji-fallback {
+            font-size: 3em;
+            display: none;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+            margin-bottom: 20px;
+        }
+
+        .auth-header h1 {
+            color: var(--gold);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-shadow: 
+                3px 3px 0 #000,
+                0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .auth-header .subtitle {
+            color: var(--purple-light);
+            font-size: 0.6em;
+            line-height: 1.8;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--purple-light);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--purple-light);
+            font-size: 0.7em;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .auth-tab::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .auth-tab:hover::before {
+            animation: shimmer 1s;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .auth-tab.active {
+            background: var(--purple);
+            color: var(--gold);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: formSlide 0.5s ease-out;
+        }
+
+        @keyframes formSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 0.6em;
+            color: var(--gold);
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        input {
+            font-family: 'Press Start 2P', monospace;
+            padding: 15px;
+            border: 2px solid var(--purple-light);
+            background: rgba(0, 0, 0, 0.5);
+            color: #e0d4ff;
+            font-size: 0.7em;
+            width: 100%;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+
+        input::placeholder {
+            color: #6b5b8a;
+        }
+
+        button {
+            font-family: 'Press Start 2P', monospace;
+            padding: 15px;
+            border: 2px solid var(--gold);
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+            color: var(--gold);
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--purple-dark);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        button:hover::before {
+            animation: shimmer 1s;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .error-message {
+            color: var(--red);
+            font-size: 0.6em;
+            text-align: center;
+            min-height: 20px;
+            margin-top: 10px;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .success-message {
+            color: var(--green);
+            font-size: 0.6em;
+            text-align: center;
+            min-height: 20px;
+            margin-top: 10px;
+        }
+
+        .pixel-cat {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 2em;
+            animation: catAnimation 5s infinite;
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .pixel-cat:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes catAnimation {
+            0%, 90%, 100% { transform: translateY(0) rotate(0deg); }
+            92% { transform: translateY(-5px) rotate(-5deg); }
+            94% { transform: translateY(0) rotate(0deg); }
+            96% { transform: translateY(-3px) rotate(5deg); }
+            98% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Мистические частицы */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            animation: particleFloat 10s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Звезды -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Луна -->
+    <div class="moon"></div>
+    
+    <!-- Облака -->
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    
+    <!-- Орнаменты -->
+    <div class="pixel-ornament ornament-1"></div>
+    <div class="pixel-ornament ornament-2"></div>
+    
+    <!-- Кот -->
+    <div class="pixel-cat" onclick="catMeow()">🐱</div>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <!-- Картинка ведьмы с fallback -->
+            <img src="witch.png" alt="Ведьма" class="witch-image" onerror="this.style.display='none'; document.getElementById('witchFallback').style.display='block';">
+            <span class="witch-emoji-fallback" id="witchFallback">🧙‍♀️</span>
+            <h1>Ведьмин Кошель</h1>
+            <div class="subtitle">Пиксельный финансовый планировщик<br>для мудрых волшебниц и волшебников</div>
+        </div>
+
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="loginTab" onclick="switchTab('login')">🔑 Вход</div>
+            <div class="auth-tab" id="registerTab" onclick="switchTab('register')">✨ Регистрация</div>
+        </div>
+
+        <!-- Форма входа -->
+        <div class="auth-form" id="loginForm">
+            <div class="form-group">
+                <label>Имя пользователя:</label>
+                <input type="text" id="loginUsername" placeholder="Введите имя">
+            </div>
+            <div class="form-group">
+                <label>Пароль:</label>
+                <input type="password" id="loginPassword" placeholder="Введите пароль">
+            </div>
+            <button onclick="login()">🔓 Войти в кошель</button>
+            <div class="error-message" id="loginError"></div>
+        </div>
+
+        <!-- Форма регистрации -->
+        <div class="auth-form hidden" id="registerForm">
+            <div class="form-group">
+                <label>Имя пользователя:</label>
+                <input type="text" id="registerUsername" placeholder="Придумайте имя">
+            </div>
+            <div class="form-group">
+                <label>Пароль:</label>
+                <input type="password" id="registerPassword" placeholder="Придумайте пароль">
+            </div>
+            <div class="form-group">
+                <label>Подтвердите пароль:</label>
+                <input type="password" id="registerPasswordConfirm" placeholder="Повторите пароль">
+            </div>
+            <button onclick="register()">✨ Создать кошель</button>
+            <div class="error-message" id="registerError"></div>
+        </div>
+    </div>
+
+    <script>
+        // Создание звезд
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Создание мистических частиц
+        function createParticles() {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = ['✨', '💜', '🔮', '⭐', '🌟'][Math.floor(Math.random() * 5)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.fontSize = Math.random() * 20 + 10 + 'px';
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Мяуканье кота
+        function catMeow() {
+            alert('Мяу! 🐱');
+        }
+
+        // Инициализация базы данных пользователей
+        function getUsers() {
+            const users = localStorage.getItem('witchWalletUsers');
+            return users ? JSON.parse(users) : {};
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('witchWalletUsers', JSON.stringify(users));
+        }
+
+        function switchTab(tab) {
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                document.getElementById('loginError').textContent = '';
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                document.getElementById('registerError').textContent = '';
+            }
+        }
+
+        function register() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            const errorElement = document.getElementById('registerError');
+            
+            errorElement.textContent = '';
+            
+            if (!username || !password || !passwordConfirm) {
+                errorElement.textContent = '⚠️ Заполните все поля!';
+                return;
+            }
+            
+            if (username.length < 3) {
+                errorElement.textContent = '⚠️ Имя должно быть не менее 3 символов!';
+                return;
+            }
+            
+            if (password.length < 4) {
+                errorElement.textContent = '⚠️ Пароль должен быть не менее 4 символов!';
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                errorElement.textContent = '⚠️ Пароли не совпадают!';
+                return;
+            }
+            
+            const users = getUsers();
+            
+            if (users[username]) {
+                errorElement.textContent = '⚠️ Пользователь уже существует!';
+                return;
+            }
+            
+            // Создаем нового пользователя
+            users[username] = {
+                password: btoa(password), // Кодируем пароль в base64
+                createdAt: new Date().toISOString(),
+                data: {},
+                checklist: []
+            };
+            
+            saveUsers(users);
+            
+            // Автоматический вход после регистрации
+            sessionStorage.setItem('currentUser', username);
+            
+            // Переход на страницу планировщика
+            window.location.href = 'planner.html';
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorElement = document.getElementById('loginError');
+            
+            errorElement.textContent = '';
+            
+            if (!username || !password) {
+                errorElement.textContent = '⚠️ Заполните все поля!';
+                return;
+            }
+            
+            const users = getUsers();
+            
+            if (!users[username]) {
+                errorElement.textContent = '⚠️ Пользователь не найден!';
+                return;
+            }
+            
+            if (users[username].password !== btoa(password)) {
+                errorElement.textContent = '⚠️ Неверный пароль!';
+                return;
+            }
+            
+            // Сохраняем текущего пользователя
+            sessionStorage.setItem('currentUser', username);
+            
+            // Переход на страницу планировщика
+            window.location.href = 'planner.html';
+        }
+
+        // Проверка, если пользователь уже вошел
+        window.addEventListener('load', function() {
+            createStars();
+            createParticles();
+            
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                window.location.href = 'planner.html';
+            }
+        });
+
+        // Обработка Enter для входа
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (!document.getElementById('loginForm').classList.contains('hidden')) {
+                    login();
+                } else {
+                    register();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

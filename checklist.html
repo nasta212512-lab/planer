@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧙‍♀️ Ведьмин Кошель — Чек-лист трат</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0d0618;
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --purple-dark: #2e1065;
+            --gold: #fbbf24;
+            --gold-light: #fde68a;
+            --gold-dark: #b45309;
+            --green: #10b981;
+            --red: #ef4444;
+            --pink: #ec4899;
+            --pixel-border: 4px;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: var(--bg);
+            color: #e0d4ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный фон */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .moon {
+            position: fixed;
+            top: 30px;
+            right: 50px;
+            width: 60px;
+            height: 60px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(253, 230, 138, 0.4);
+            animation: moonGlow 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { box-shadow: 0 0 40px rgba(253, 230, 138, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(253, 230, 138, 0.6); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Шапка */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--purple-dark) 0%, #1e0a3c 100%);
+            border: var(--pixel-border) solid var(--gold);
+            box-shadow: 
+                8px 8px 0 rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(124, 58, 237, 0.3);
+            position: relative;
+            animation: slideDown 0.5s ease-out;
+            border-radius: 10px;
+        }
+
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            color: var(--gold);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-shadow: 
+                3px 3px 0 #000,
+                0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        header .subtitle {
+            color: var(--purple-light);
+            font-size: 0.6em;
+            line-height: 1.5;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            z-index: 10;
+        }
+
+        .user-name {
+            color: var(--gold);
+            font-size: 0.6em;
+            text-shadow: 1px 1px 0 #000;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border: 2px solid var(--purple-light);
+            border-radius: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 15px;
+            font-size: 0.5em;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+            border: 2px solid var(--gold);
+            width: auto;
+            cursor: pointer;
+            color: var(--gold);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--purple-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .nav-btn:hover::before {
+            animation: shimmer 1s;
+        }
+
+        .logout-btn {
+            padding: 10px 15px;
+            font-size: 0.5em;
+            background: linear-gradient(135deg, var(--red) 0%, #991b1b 100%);
+            border: 2px solid #fff;
+            width: auto;
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        .logout-btn:hover {
+            background: #fff;
+            color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .witch-emoji {
+            font-size: 2em;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Панель добавления */
+        .controls-panel {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--purple-dark) 0%, #1e0a3c 100%);
+            border: 3px solid var(--purple-light);
+            animation: fadeIn 0.5s ease-out;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .controls-panel::before {
+            content: '🛒';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 1.5em;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.6em;
+            margin-bottom: 10px;
+            color: var(--gold);
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        input, select, button {
+            font-family: 'Press Start 2P', monospace;
+            padding: 12px;
+            border: 2px solid var(--purple-light);
+            background: rgba(0, 0, 0, 0.5);
+            color: #e0d4ff;
+            font-size: 0.7em;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+
+        input::placeholder {
+            color: #6b5b8a;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+            color: var(--gold);
+            border-color: var(--gold);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--purple-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        button:hover::before {
+            animation: shimmer 1s;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, var(--red) 0%, #991b1b 100%);
+            border-color: #fff;
+            color: #fff;
+        }
+
+        button.success {
+            background: linear-gradient(135deg, var(--green) 0%, #047857 100%);
+            border-color: #fff;
+            color: #fff;
+        }
+
+        button.small {
+            width: auto;
+            padding: 8px;
+            font-size: 0.5em;
+            margin: 5px;
+        }
+
+        /* Статистика */
+        .stats-panel {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--purple-dark) 0%, #1e0a3c 100%);
+            border: 2px solid var(--purple-light);
+            text-align: center;
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-color: var(--gold);
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5em;
+            color: var(--gold);
+            margin-top: 10px;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.6em;
+            color: var(--purple-light);
+        }
+
+        /* Разделитель */
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--purple-light) 25%, 
+                var(--gold) 50%, 
+                var(--purple-light) 75%, 
+                transparent
+            );
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 15px;
+            background: var(--gold);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        /* Чек-лист */
+        .checklist-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .checklist-item {
+            background: linear-gradient(135deg, #2e1065 0%, #1e0a3c 100%);
+            border: 3px solid var(--purple-light);
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .checklist-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .checklist-item.completed {
+            opacity: 0.7;
+            border-color: var(--green);
+            background: linear-gradient(135deg, #064e3b 0%, #1e0a3c 100%);
+        }
+
+        .checklist-item.completed .item-name {
+            text-decoration: line-through;
+            color: var(--purple-light);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .item-name {
+            font-size: 0.8em;
+            color: var(--gold);
+            flex: 1;
+            min-width: 200px;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .item-price {
+            font-size: 0.8em;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .item-description {
+            font-size: 0.6em;
+            color: var(--purple-light);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .checkbox {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            border: 3px solid var(--gold);
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: var(--green);
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        .checkbox:hover {
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+            transform: scale(1.1);
+        }
+
+        .checkbox.checked {
+            background: var(--green);
+            border-color: var(--green);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, var(--purple-dark) 0%, #1e0a3c 100%);
+            border: 2px dashed var(--purple-light);
+            border-radius: 8px;
+        }
+
+        .empty-state .emoji {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .empty-state p {
+            font-size: 0.7em;
+            color: var(--purple-light);
+            line-height: 1.5;
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: modalFade 0.3s ease-out;
+        }
+
+        @keyframes modalFade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, #1e0a3c 100%);
+            border: 3px solid var(--gold);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 
+                0 0 40px rgba(124, 58, 237, 0.5),
+                8px 8px 0 rgba(0, 0, 0, 0.5);
+            animation: modalSlide 0.3s ease-out;
+            border-radius: 10px;
+        }
+
+        @keyframes modalSlide {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 0.7em;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .modal .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Кот */
+        .pixel-cat {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 2em;
+            animation: catAnimation 5s infinite;
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+        }
+
+        .pixel-cat:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes catAnimation {
+            0%, 90%, 100% { transform: translateY(0) rotate(0deg); }
+            92% { transform: translateY(-5px) rotate(-5deg); }
+            94% { transform: translateY(0) rotate(0deg); }
+            96% { transform: translateY(-3px) rotate(5deg); }
+            98% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* Мистические частицы */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            animation: particleFloat 10s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                position: static;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            
+            .controls-panel {
+                flex-direction: column;
+            }
+            
+            .stats-panel {
+                flex-direction: column;
+            }
+            
+            .nav-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Звезды -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Луна -->
+    <div class="moon"></div>
+    
+    <!-- Кот -->
+    <div class="pixel-cat" onclick="catMeow()">🐱</div>
+
+    <div class="container">
+        <header>
+            <div class="witch-emoji">🧙‍♀️</div>
+            <h1>Чек-лист трат</h1>
+            <div class="subtitle">Планируй покупки мудро,<br>как настоящая ведьма</div>
+            <div class="user-info">
+                <span class="user-name" id="userName"></span>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToPlanner()">📊 Планер</button>
+                    <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls-panel">
+            <div class="control-group">
+                <label>Название покупки:</label>
+                <input type="text" id="itemName" placeholder="Что хотите купить?">
+            </div>
+            <div class="control-group">
+                <label>Стоимость:</label>
+                <input type="number" id="itemPrice" placeholder="Цена" min="0">
+            </div>
+            <div class="control-group">
+                <label>Описание (необязательно):</label>
+                <input type="text" id="itemDescription" placeholder="Дополнительная информация">
+            </div>
+            <div class="control-group">
+                <button onclick="addItem()">✨ Добавить в список</button>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-card">
+                <div class="stat-label">Всего покупок</div>
+                <div class="stat-value" id="totalItems">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Выполнено</div>
+                <div class="stat-value" style="color: var(--green);" id="completedItems">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Общая сумма</div>
+                <div class="stat-value" id="totalPrice">0 ₽</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Потрачено</div>
+                <div class="stat-value" style="color: var(--gold);" id="spentPrice">0 ₽</div>
+            </div>
+        </div>
+
+        <!-- Разделитель -->
+        <div class="section-divider"></div>
+
+        <div class="checklist-container" id="checklistContainer">
+            <!-- Здесь будут отображаться элементы чек-листа -->
+        </div>
+    </div>
+
+    <!-- Модальное окно для редактирования -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>✏️ Редактировать покупку</h3>
+            <div class="form-group">
+                <label>Название:</label>
+                <input type="text" id="editItemName">
+            </div>
+            <div class="form-group">
+                <label>Стоимость:</label>
+                <input type="number" id="editItemPrice" min="0">
+            </div>
+            <div class="form-group">
+                <label>Описание:</label>
+                <input type="text" id="editItemDescription">
+            </div>
+            <div class="modal-buttons">
+                <button onclick="closeEditModal()">Отмена</button>
+                <button onclick="saveEdit()" class="success">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация данных
+        let currentUser = null;
+        let checklistData = [];
+        let editingItemId = null;
+
+        // Создание звезд
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Создание мистических частиц
+        function createParticles() {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = ['✨', '💜', '🔮', '⭐', '🌟'][Math.floor(Math.random() * 5)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.fontSize = Math.random() * 20 + 10 + 'px';
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Мяуканье кота
+        function catMeow() {
+            alert('Мяу! 🐱');
+        }
+
+        // Проверка авторизации
+        function checkAuth() {
+            const username = sessionStorage.getItem('currentUser');
+            if (!username) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            
+            currentUser = username;
+            document.getElementById('userName').textContent = `👤 ${username}`;
+            
+            // Загружаем данные чек-листа
+            loadChecklistData(username);
+            
+            return username;
+        }
+
+        function loadChecklistData(username) {
+            const users = JSON.parse(localStorage.getItem('witchWalletUsers') || '{}');
+            const user = users[username];
+            
+            if (user && user.checklist) {
+                checklistData = user.checklist;
+            } else {
+                checklistData = [];
+            }
+            
+            updateDisplay();
+        }
+
+        function saveChecklistData() {
+            if (!currentUser) return;
+            
+            const users = JSON.parse(localStorage.getItem('witchWalletUsers') || '{}');
+            if (users[currentUser]) {
+                users[currentUser].checklist = checklistData;
+                users[currentUser].lastModified = new Date().toISOString();
+                localStorage.setItem('witchWalletUsers', JSON.stringify(users));
+            }
+        }
+
+        function addItem() {
+            const name = document.getElementById('itemName').value.trim();
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const description = document.getElementById('itemDescription').value.trim();
+            
+            if (!name) {
+                alert('Введите название покупки!');
+                return;
+            }
+            
+            if (!price || price <= 0) {
+                alert('Введите корректную стоимость!');
+                return;
+            }
+            
+            const newItem = {
+                id: 'item_' + Date.now(),
+                name: name,
+                price: price,
+                description: description || '',
+                completed: false,
+                createdAt: new Date().toISOString(),
+                completedAt: null
+            };
+            
+            checklistData.push(newItem);
+            
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemDescription').value = '';
+            
+            saveChecklistData();
+            updateDisplay();
+        }
+
+        function toggleComplete(itemId) {
+            const item = checklistData.find(i => i.id === itemId);
+            
+            if (item) {
+                item.completed = !item.completed;
+                
+                if (item.completed) {
+                    item.completedAt = new Date().toISOString();
+                } else {
+                    item.completedAt = null;
+                }
+                
+                saveChecklistData();
+                updateDisplay();
+            }
+        }
+
+        function editItem(itemId) {
+            const item = checklistData.find(i => i.id === itemId);
+            
+            if (item) {
+                editingItemId = itemId;
+                document.getElementById('editItemName').value = item.name;
+                document.getElementById('editItemPrice').value = item.price;
+                document.getElementById('editItemDescription').value = item.description;
+                
+                document.getElementById('editModal').classList.add('active');
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editingItemId = null;
+        }
+
+        function saveEdit() {
+            const name = document.getElementById('editItemName').value.trim();
+            const price = parseFloat(document.getElementById('editItemPrice').value);
+            const description = document.getElementById('editItemDescription').value.trim();
+            
+            if (!name) {
+                alert('Введите название покупки!');
+                return;
+            }
+            
+            if (!price || price <= 0) {
+                alert('Введите корректную стоимость!');
+                return;
+            }
+            
+            const item = checklistData.find(i => i.id === editingItemId);
+            
+            if (item) {
+                item.name = name;
+                item.price = price;
+                item.description = description || '';
+                
+                saveChecklistData();
+                updateDisplay();
+                closeEditModal();
+            }
+        }
+
+        function deleteItem(itemId) {
+            if (confirm('Удалить эту покупку из списка?')) {
+                checklistData = checklistData.filter(i => i.id !== itemId);
+                saveChecklistData();
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            const container = document.getElementById('checklistContainer');
+            
+            // Обновляем статистику
+            const totalItems = checklistData.length;
+            const completedItems = checklistData.filter(i => i.completed).length;
+            const totalPrice = checklistData.reduce((sum, i) => sum + i.price, 0);
+            const spentPrice = checklistData
+                .filter(i => i.completed)
+                .reduce((sum, i) => sum + i.price, 0);
+            
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('completedItems').textContent = completedItems;
+            document.getElementById('totalPrice').textContent = totalPrice.toFixed(2) + ' ₽';
+            document.getElementById('spentPrice').textContent = spentPrice.toFixed(2) + ' ₽';
+            
+            // Отображаем чек-лист
+            if (checklistData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">🛒</div>
+                        <p>Ваш чек-лист пуст.<br>Добавьте первую покупку, чтобы начать планировать!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Сортируем: сначала невыполненные, потом выполненные
+            const sortedItems = [...checklistData].sort((a, b) => {
+                if (a.completed === b.completed) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                }
+                return a.completed ? 1 : -1;
+            });
+            
+            container.innerHTML = '';
+            
+            for (const item of sortedItems) {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'checklist-item';
+                
+                if (item.completed) {
+                    itemElement.classList.add('completed');
+                }
+                
+                const checkboxClass = item.completed ? 'checked' : '';
+                const checkboxContent = item.completed ? '✓' : '';
+                
+                itemElement.innerHTML = `
+                    <div class="item-header">
+                        <div class="checkbox ${checkboxClass}" onclick="toggleComplete('${item.id}')">
+                            ${checkboxContent}
+                        </div>
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-price">${item.price.toFixed(2)} ₽</span>
+                        <div class="item-actions">
+                            <button class="small" onclick="editItem('${item.id}')">✏️</button>
+                            <button class="small danger" onclick="deleteItem('${item.id}')">🗑️</button>
+                        </div>
+                    </div>
+                    ${item.description ? `<div class="item-description">📝 ${item.description}</div>` : ''}
+                    ${item.completed && item.completedAt ? 
+                        `<div class="item-description" style="color: var(--green);">
+                            ✅ Выполнено: ${new Date(item.completedAt).toLocaleDateString('ru-RU')}
+                        </div>` : ''}
+                `;
+                
+                container.appendChild(itemElement);
+            }
+        }
+
+        function goToPlanner() {
+            window.location.href = 'planner.html';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // Закрытие модального окна при клике вне его
+        document.addEventListener('click', function(event) {
+            const editModal = document.getElementById('editModal');
+            
+            if (event.target === editModal) {
+                closeEditModal();
+            }
+        });
+
+        // Инициализация
+        window.addEventListener('load', function() {
+            createStars();
+            createParticles();
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
