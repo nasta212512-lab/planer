@@ -150,6 +150,7 @@
             position: relative;
             z-index: 10;
             animation: containerAppear 0.5s ease-out;
+            border-radius: 10px;
         }
 
         @keyframes containerAppear {
@@ -426,6 +427,85 @@
                 opacity: 0;
             }
         }
+
+        /* Кнопки синхронизации */
+        .sync-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .sync-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px;
+            font-size: 0.5em;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--purple-light);
+            color: var(--purple-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+        
+        .sync-btn:hover {
+            background: var(--purple);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+        
+        /* Модальное окно */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--purple-dark);
+            border: 3px solid var(--gold);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border-radius: 10px;
+        }
+        
+        .modal h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 0.7em;
+        }
+        
+        .modal .sync-code-display {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--gold);
+            padding: 15px;
+            font-size: 0.6em;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -490,6 +570,43 @@
             </div>
             <button onclick="register()">✨ Создать кошель</button>
             <div class="error-message" id="registerError"></div>
+        </div>
+
+        <!-- Кнопки синхронизации -->
+        <div class="sync-actions">
+            <button class="sync-btn" onclick="showSyncCode()">🔗 Получить код</button>
+            <button class="sync-btn" onclick="openRestoreModal()">📱 Восстановить</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно для кода синхронизации -->
+    <div class="modal-overlay" id="syncCodeModal">
+        <div class="modal">
+            <h3>🔗 Ваш код синхронизации</h3>
+            <p style="font-size: 0.5em; color: var(--purple-light); margin-bottom: 15px;">
+                Сохраните этот код. С его помощью вы сможете восстановить доступ на другом устройстве:
+            </p>
+            <div class="sync-code-display" id="syncCodeDisplay"></div>
+            <div class="modal-buttons">
+                <button onclick="copySyncCode()">📋 Копировать</button>
+                <button onclick="closeSyncCodeModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для восстановления -->
+    <div class="modal-overlay" id="restoreModal">
+        <div class="modal">
+            <h3>📱 Восстановление доступа</h3>
+            <p style="font-size: 0.5em; color: var(--purple-light); margin-bottom: 15px;">
+                Введите код синхронизации, полученный на другом устройстве:
+            </p>
+            <input type="text" id="restoreCodeInput" placeholder="Вставьте код синхронизации" style="margin-bottom: 15px;">
+            <div class="modal-buttons">
+                <button onclick="closeRestoreModal()">Отмена</button>
+                <button onclick="restoreFromCode()" style="background: var(--green);">Восстановить</button>
+            </div>
+            <div class="error-message" id="restoreError"></div>
         </div>
     </div>
 
@@ -641,6 +758,117 @@
             window.location.href = 'planner.html';
         }
 
+        // Генерация кода синхронизации
+        function generateSyncCode(username, password) {
+            const data = `${username}:${password}`;
+            return btoa(data);
+        }
+
+        // Показать код синхронизации
+        function showSyncCode() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                alert('⚠️ Введите имя пользователя и пароль!');
+                return;
+            }
+            
+            const users = getUsers();
+            
+            if (!users[username]) {
+                alert('⚠️ Пользователь не найден!');
+                return;
+            }
+            
+            if (users[username].password !== btoa(password)) {
+                alert('⚠️ Неверный пароль!');
+                return;
+            }
+            
+            const syncCode = generateSyncCode(username, password);
+            document.getElementById('syncCodeDisplay').textContent = syncCode;
+            document.getElementById('syncCodeModal').classList.add('active');
+        }
+
+        // Копировать код синхронизации
+        function copySyncCode() {
+            const syncCode = document.getElementById('syncCodeDisplay').textContent;
+            
+            navigator.clipboard.writeText(syncCode).then(() => {
+                alert('✅ Код скопирован в буфер обмена!');
+            }).catch(() => {
+                // Fallback для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = syncCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+                alert('✅ Код скопирован в буфер обмена!');
+            });
+        }
+
+        // Закрыть модальное окно кода
+        function closeSyncCodeModal() {
+            document.getElementById('syncCodeModal').classList.remove('active');
+        }
+
+        // Открыть модальное окно восстановления
+        function openRestoreModal() {
+            document.getElementById('restoreModal').classList.add('active');
+            document.getElementById('restoreCodeInput').value = '';
+            document.getElementById('restoreError').textContent = '';
+        }
+
+        // Закрыть модальное окно восстановления
+        function closeRestoreModal() {
+            document.getElementById('restoreModal').classList.remove('active');
+        }
+
+        // Восстановление по коду
+        function restoreFromCode() {
+            const syncCode = document.getElementById('restoreCodeInput').value.trim();
+            const errorElement = document.getElementById('restoreError');
+            
+            errorElement.textContent = '';
+            
+            if (!syncCode) {
+                errorElement.textContent = '⚠️ Введите код синхронизации!';
+                return;
+            }
+            
+            try {
+                const decoded = atob(syncCode);
+                const [username, password] = decoded.split(':');
+                
+                if (!username || !password) {
+                    errorElement.textContent = '⚠️ Неверный формат кода!';
+                    return;
+                }
+                
+                const users = getUsers();
+                
+                if (!users[username]) {
+                    errorElement.textContent = '⚠️ Пользователь не найден!';
+                    return;
+                }
+                
+                if (users[username].password !== btoa(password)) {
+                    errorElement.textContent = '⚠️ Неверные данные в коде!';
+                    return;
+                }
+                
+                // Успешное восстановление
+                sessionStorage.setItem('currentUser', username);
+                closeRestoreModal();
+                window.location.href = 'planner.html';
+                
+            } catch (error) {
+                errorElement.textContent = '⚠️ Ошибка при декодировании кода!';
+            }
+        }
+
         // Проверка, если пользователь уже вошел
         window.addEventListener('load', function() {
             createStars();
@@ -660,6 +888,20 @@
                 } else {
                     register();
                 }
+            }
+        });
+
+        // Закрытие модальных окон при клике вне
+        document.addEventListener('click', function(event) {
+            const syncModal = document.getElementById('syncCodeModal');
+            const restoreModal = document.getElementById('restoreModal');
+            
+            if (event.target === syncModal) {
+                closeSyncCodeModal();
+            }
+            
+            if (event.target === restoreModal) {
+                closeRestoreModal();
             }
         });
     </script>
